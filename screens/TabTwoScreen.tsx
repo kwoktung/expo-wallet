@@ -1,15 +1,46 @@
 import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+import * as bitcoin from "bitcoinjs-lib";
+import * as bip39 from "bip39"
+import { Box, Center, Text } from 'native-base'
+import { useEffect, useState } from 'react';
+
+const network = bitcoin.networks.regtest
+
+const MNEMONIC =
+  "post finish turkey bulb glory banner hybrid sock scout outdoor close planet";
+  const seed0 = bip39.mnemonicToSeedSync(MNEMONIC)
+  const master0 = bitcoin.bip32.fromSeed(seed0);
+  const child0 = master0.derivePath("m/44'/0'/0'/0/0")
+
+  let user0p2pkh = bitcoin.payments.p2pkh({ pubkey: child0.publicKey, network })
+  let user0p2wpkh = bitcoin.payments.p2wpkh({ pubkey: child0.publicKey, network })
+  let user0p2sh = bitcoin.payments.p2sh({ redeem: user0p2wpkh })
 
 export default function TabTwoScreen() {
+  const [val, setVal] = useState('0')
+  useEffect(() => {
+    fetch(`https://tbtc1.trezor.io/api/v1/utxo/${user0p2pkh.address}`).then(res => {
+      return res.json()
+    }).then(json => {
+      if (Array.isArray(json)) {
+        const total = json.reduce((a, b) => {
+          return +a + (+b.amount)
+        }, 0)
+        setVal(total)
+      }
+    })
+  }, [])
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabTwoScreen.tsx" />
-    </View>
+    <Center style={styles.container}>
+      <Box><Text>MNEMONIC: {MNEMONIC}</Text></Box>
+      <Box><Text>m/44'/0'/0'/0/0 p2pkh address: {user0p2pkh.address}</Text></Box>
+      <Box><Text>m/44'/0'/0'/0/0 p2wpkh address: {user0p2wpkh.address}</Text></Box>
+      <Box><Text>m/44'/0'/0'/0/0 p2sh address: {user0p2sh.address}</Text></Box>
+
+      <Box><Text>m/44'/0'/0'/0/0 p2sh address balace: {val} BTC</Text></Box>
+    </Center>
   );
 }
 
