@@ -1,3 +1,5 @@
+import './shim'
+
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NativeBaseProvider } from "native-base";

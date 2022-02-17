@@ -34,12 +34,22 @@ export default function TabTwoScreen() {
 
   return (
     <Center style={styles.container}>
-      <Box><Text>MNEMONIC: {MNEMONIC}</Text></Box>
-      <Box><Text>m/44'/0'/0'/0/0 p2pkh address: {user0p2pkh.address}</Text></Box>
-      <Box><Text>m/44'/0'/0'/0/0 p2wpkh address: {user0p2wpkh.address}</Text></Box>
-      <Box><Text>m/44'/0'/0'/0/0 p2sh address: {user0p2sh.address}</Text></Box>
-
-      <Box><Text>m/44'/0'/0'/0/0 p2sh address balace: {val} BTC</Text></Box>
+      <Center mb='4'>
+        <Box><Text>MNEMONIC:</Text></Box>
+        <Box><Text textAlign={'center'}>{MNEMONIC}</Text></Box>
+      </Center>
+      <Center mb='4'>
+        <Box><Text>m/44'/0'/0'/0/0 p2pkh address::</Text></Box>
+        <Box>{user0p2pkh.address}</Box>
+      </Center>
+      <Center mb='4'>
+        <Box><Text>m/44'/0'/0'/0/0 p2wpkh address</Text></Box>
+        <Box>{user0p2wpkh.address}</Box>
+      </Center>
+      <Center mb='4'>
+        <Box><Text>m/44'/0'/0'/0/0 p2sh address balace:</Text></Box>
+        <Box><Text> {val} BTC</Text></Box>
+      </Center>
     </Center>
   );
 }
